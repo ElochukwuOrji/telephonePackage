@@ -1,0 +1,76 @@
+class Telephone {
+    constructor() {
+        this.phoneNumbers = []; //This will store all added phone numbers
+        this.observers = []; //This will store all your observers
+    }
+
+    addPhoneNumber(number) {
+        if (!this.phoneNumbers.includes(number)) {
+            this.phoneNumbers.push(number); //Add the number to the list
+            console.log(`Added phone number: ${number}`); //Confirmation message
+        } else {
+            console.log(`Phone number ${number} already exists.`); //Error message if already exists
+        }
+    }
+
+    removePhoneNumber(number) {
+        const index = this.phoneNumbers.indexOf(number); //Find the index of the number
+        if (index > -1) {
+            this.phoneNumbers.splice(index, 1); //Remove the number from the list
+            console.log(`Removed phone number: ${number}`); //Confirmation message
+        } else {
+            console.log(`Phone number ${number} does not exist.`); //Error message if not found
+        }
+    }
+
+    dialPhoneNumber(number) {
+        if (this.phoneNumbers.includes(number)) {
+            this.notifyObservers(number); //Notify observers if the number exists
+        } else {
+            console.log(`Phone number ${number} is not in the list.`); //Error message if not found
+        }
+    }
+
+    addObserver(observer) {
+        this.observers.push(observer); //Add a new observer to the list
+    }
+
+    removeObserver(observer) {
+        this.observers = this.observers.filter(obs => obs !== observer); //Remove an observer from the list
+    }
+
+    notifyObservers(number) {
+        this.observers.forEach(observer => observer.notify(number)); //Notify each observer
+    }
+}
+
+class Observer {
+    notify(number) {
+        // This will be implemented by concrete observers
+    }
+}
+
+class PhoneNumberObserver extends Observer {
+    notify(number) {
+        console.log(`Dialed phone number: ${number}`); //Prints the dialed number
+    }
+}
+
+class DialingObserver extends Observer {
+    notify(number) {
+        console.log(`Now Dialling ${number}`); //Prints a custom messsage
+    }
+}
+
+const telephone = new Telephone(); //Create a new Telephone instance
+
+const phoneNumberObserver = new PhoneNumberObserver(); //Create the first observer
+const dialingObserver = new DialingObserver(); //Create the second observer
+
+telephone.addObserver(phoneNumberObserver); //Add the first observer
+telephone.addObserver(dialingObserver); //Add the second observer
+
+telephone.addPhoneNumber('2347023232'); //Add a phone number
+telephone.dialPhoneNumber('2347023232'); //Dial the phone number
+telephone.removePhoneNumber('2347023232'); //Remove the phone number
+telephone.dialPhoneNumber('2347023232'); //Try to dial again
